@@ -192,7 +192,7 @@ from . import models""" % user)
         models = [f for f in listdir(path) if
                   isfile(join(path, f)) if f.endswith('.py')]
         for i in models:
-            init_head += "from . import %s\n" % i
+            init_head += "from . import %s\n" % i.replace('.py', '')
         init = open(path + '/__init__.py', 'w')
         init.write(init_head)
         init.close()
