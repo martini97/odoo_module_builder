@@ -211,7 +211,7 @@ from . import models""" % user)
                 self.destroy()
             else:
                 tkMessageBox.showerror('Erro!', 'Problem found during module \
-    creation. Please, try again.')
+creation. Please, try again.')
 
     def get_module_name(self):
         module_name = str(self.module_name_entry.get())
@@ -375,10 +375,33 @@ Eg.: Sales or Project ..."""
 
         self.grid_columnconfigure(0, weight=1)
 
+
+def center(win):
+    """
+    centers a tkinter window
+    :param win: the root or Toplevel window to center
+    This function was taken from stack overflow:
+    http://stackoverflow.com/questions/3352918/how-to-center-a-window-on-the-screen-in-tkinter
+    Author: Honest Abe (http://stackoverflow.com/users/1217270/honest-abe)
+    """
+    win.update_idletasks()
+    width = win.winfo_width()
+    frm_width = win.winfo_rootx() - win.winfo_x()
+    win_width = width + 2 * frm_width
+    height = win.winfo_height()
+    titlebar_height = win.winfo_rooty() - win.winfo_y()
+    win_height = height + titlebar_height + frm_width
+    x = win.winfo_screenwidth() // 2 - win_width // 2
+    y = win.winfo_screenheight() // 2 - win_height // 2
+    win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    win.deiconify()
+
 if __name__ == "__main__":
+
     app = OdooBuilder(None)
     app.title('Odoo Module Builder')
     app.resizable(False, False)
     img = tk.PhotoImage(file='icon.png')
     app.tk.call('wm', 'iconphoto', app._w, img)
+    center(app)
     app.mainloop()
