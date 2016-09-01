@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="%s" model="ir.ui.view">
+            <field name="name">%s</field>
+            <field name="model"> </field>
+            <!--<field name="inherit_id" ref=" "/>-->
+            <field name="arch" type="xml">
+
+            </field>
+        </record>
+  </data>
+</openerp>

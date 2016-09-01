@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+# © 2016 %s, Trustcode
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
+{
+    'name': '%s',
+    'summary': "%s",
+    'version': '8.0.1.0.0',
+    'category': '%s',
+    'author': 'Trustcode',
+    'license': 'AGPL-3',
+    'website': 'http://www.trustcode.com.br',
+    'contributors': ['Mackilem Van der Laan Soares <mack.vdl@gmail.com>',
+                     'Danimar Ribeiro <danimaribeiro@gmail.com>',
+                     'Alessanandro Fernandes Martini \
+                     <alessandrofmartini@gmail.com>'],
+    'depends': %r,
+    'data': %r
+}
