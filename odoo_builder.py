@@ -321,6 +321,7 @@ Eg.: Sales or Project ..."""
         self.path_entry.insert(0, pathdir)
 
     def clear(self):
+        """Clear the user entries"""
         self.path_entry.delete(0, tk.END)
         self.module_name_entry.delete(0, tk.END)
         self.user_name_entry.delete(0, tk.END)
@@ -329,15 +330,19 @@ Eg.: Sales or Project ..."""
         self.inheritance_entry.delete(0, tk.END)
         self.category_entry.delete(0, tk.END)
         self.description_entry.delete('0.0', tk.END)
+        self.wizard_create.deselect()
         self.path_entry.focus_set()
 
     def loop_exists(self, *args):
+        """Receives a list of strings, and check to see if the path that they
+           represent exists"""
         check = True
         for arg in args:
             check = check and exists(arg)
         return check
 
     def check_success(self):
+        """Checks to assure that the paths were created"""
         success = True
         module_name = self.module_name_entry.get().lower().replace(' ', '_')
         module_name = re.sub('[^A-Za-z0-9-_]', '', module_name)
@@ -347,10 +352,17 @@ Eg.: Sales or Project ..."""
         xml = path + '/' + module_name + '/views/%s.xml' % module_name
         init = path + '/' + module_name + '/' + '__init__.py'
         openerp = path + '/' + module_name + '/' + '__openerp__.py'
-        success = self.loop_exists(path, mod_init, icon, xml, init, openerp)
+        if self.wizard.get():
+            wizard = path + '/' + module_name + '/wizard'
+            success = self.loop_exists(path, mod_init, icon, xml, init,
+                                       openerp, wizard)
+        else:
+            success = self.loop_exists(path, mod_init, icon, xml, init,
+                                       openerp)
         return success
 
     def initialize(self):
+        """Creates the app window"""
         self.grid()
 
         self.path_label = tk.Label(self, text="Module Path: ")
