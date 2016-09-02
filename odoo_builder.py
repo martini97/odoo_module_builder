@@ -133,6 +133,9 @@ class OdooBuilder(tk.Tk):
         depends = list(set(depends))
         data = ['/views/' + f for f in listdir(data_path) if
                 isfile(join(data_path, f)) if f.endswith('.xml')]
+        if self.wizard.get():
+            data += ['/wizard/' + self.get_module_name()['py_file'] +
+                     '_wizard.xml']
         openerp = self.obj_builder('openerp', user, module_name, summary,
                                    category, depends, data)
         opnrp_file = open(path + '/__openerp__.py', 'w')
@@ -158,12 +161,16 @@ class OdooBuilder(tk.Tk):
             self.get_module_name()['py_file']
         user = self.user_name_entry.get().title()
         init = open(path + '/__init__.py', 'w')
-        init.write("""\
+        init_text = """\
 # -*- coding: utf-8 -*-
 # © 2016 %s, Trustcode
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from . import models""" % user)
+from . import models""" % user
+        if not self.wizard.get():
+            init.write(init_text)
+        else:
+            init.write(init_text + '\nfrom . import wizard\n')
         init.close()
 
     def build_views(self):
@@ -181,9 +188,9 @@ from . import models""" % user)
                 'view', view_id, view_name))
             view.close()
 
-    def build_init_models(self):
+    def build_init_local(self, local):
         path = self.path_entry.get() + '/' +\
-            self.get_module_name()['py_file'] + '/models'
+            self.get_module_name()['py_file'] + local
         user = self.user_name_entry.get().title()
         init_head = """\
 # -*- coding: utf-8 -*-
@@ -198,15 +205,53 @@ from . import models""" % user)
         init.write(init_head)
         init.close()
 
+    def build_wizard_py(self):
+        path = self.path_entry.get() + '/' +\
+            self.get_module_name()['py_file'] + '/wizard'
+        user = self.user_name_entry.get().title()
+        wizard_class = self.get_module_name()['class']
+        wizard_object = self.get_module_name()['object']
+        os.mkdir(path)
+        py_wizard = self.obj_builder('wizard_py', user, wizard_class,
+                                     wizard_object)
+        wizard_py = open(path + '/' + self.get_module_name()['py_file'] +
+                         '.py', 'w')
+        wizard_py.write(py_wizard)
+        wizard_py.close()
+        self.build_init_local('/wizard')
+
+    def build_wizard_xml(self):
+        path = self.path_entry.get() + '/' +\
+            self.get_module_name()['py_file'] + '/wizard'
+        if not exists(path):
+            os.mkdir(path)
+        wizard_xml = path + '/' + self.get_module_name()['py_file'] + '_wizard'
+        wizard_id = self.get_module_name()['py_file'] + '_wizard'
+        wizard_name = wizard_id.replace('_', '.')
+        wizard_model = (self.get_module_name()['py_file'] + '.view').\
+            replace('_', '.')
+        action_id = (self.get_module_name()['py_file'] + '_action')
+        wizard_content = self.obj_builder('wizard_xml', wizard_id, wizard_name,
+                                          wizard_model, action_id)
+        wizard = open(wizard_xml + '.xml', 'w')
+        wizard.write(wizard_content)
+        wizard.close()
+
+    def build_wizard(self):
+        if self.wizard.get():
+            self.build_wizard_py()
+            self.build_wizard_xml()
+
     def create_module(self):
         if self.create_paths():
             self.build_models()
             self.build_views()
             self.build_openerp()
             self.built_init_module()
-            self.build_init_models()
+            self.build_init_local('/models')
             self.build_static()
             self.build_static()
+            self.build_wizard()
             if self.check_success():
                 tkMessageBox.showinfo('Succes!', 'Module created succesfully.')
                 self.destroy()
@@ -382,6 +427,11 @@ Eg.: Sales or Project ..."""
         self.clear = tk.Button(
             self, text="Clear", command=self.clear)
         self.clear.grid(row=5, column=8)
+
+        self.wizard = tk.IntVar()
+        self.wizard_create = tk.Checkbutton(self, text='Create Wizard',
+                                            variable=self.wizard)
+        self.wizard_create.grid(row=7, column=6)
 
         self.grid_columnconfigure(0, weight=1)
 

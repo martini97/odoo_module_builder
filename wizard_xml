@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="%s">
+            <field name="name">%s</field>
+            <field name="model">%s</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+
+            </field>
+        </record>
+
+
+        <act_window id="%s"
+                    name=""
+                    src_model=""
+                    res_model=""
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/>
+
+    </data>
+</openerp>
