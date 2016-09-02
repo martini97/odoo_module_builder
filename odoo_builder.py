@@ -262,7 +262,7 @@ will depends, separated by commas.\nEg.: sale, contact, porduct, ..."""
 
     def show_help_description(self):
             desc_help_message = """Fill this field with your module description \
-    that will go in the index.html file."""
+that will go in the index.html file."""
             tkMessageBox.showinfo('Description', desc_help_message)
 
     def show_help_category(self):
