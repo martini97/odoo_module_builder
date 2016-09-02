@@ -7,6 +7,7 @@ from os.path import join
 from shutil import copyfile
 import Tkinter as tk
 import tkMessageBox
+import tkFileDialog
 from os import listdir
 import re
 
@@ -269,6 +270,11 @@ will depends, separated by commas.\nEg.: sale, contact, porduct, ..."""
 Eg.: Sales or Project ..."""
         tkMessageBox.showinfo('Description', desc_help_message)
 
+    def chose_dir(self):
+        pathdir = tkFileDialog.askdirectory(title="Chose the dir")
+        self.path_entry.delete(0, tk.END)
+        self.path_entry.insert(0, pathdir)
+
     def clear(self):
         self.path_entry.delete(0, tk.END)
         self.module_name_entry.delete(0, tk.END)
@@ -304,8 +310,12 @@ Eg.: Sales or Project ..."""
 
         self.path_label = tk.Label(self, text="Module Path: ")
         self.path_entry = tk.Entry(self, bd=5, bg='light slate blue')
+        self.path_chose_dir = tk.Button(self, text='...', bg='blue',
+                                        fg='white',
+                                        command=self.chose_dir)
         self.path_label.grid(row=0, column=0)
         self.path_entry.grid(row=0, column=1)
+        self.path_chose_dir.grid(row=0, column=2)
         self.path_entry.insert(0, os.path.dirname(os.path.abspath(__file__)))
         # sets the current directory as default
 
