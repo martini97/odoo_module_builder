@@ -104,7 +104,7 @@ class OdooBuilder(tk.Tk):
                 replace(' ', ''), i.replace('_', '.')))
             class_.close()
 
-    def build_openerp(self):
+    def build_manifest(self):
         path = self.path_entry.get() + '/' +\
             self.get_module_name()['py_file']
         data_path = self.path_entry.get() + '/' +\
@@ -136,10 +136,10 @@ class OdooBuilder(tk.Tk):
         if self.wizard.get():
             data += ['/wizard/' + self.get_module_name()['py_file'] +
                      '_wizard.xml']
-        openerp = self.obj_builder('openerp', user, module_name, summary,
-                                   category, depends, data)
-        opnrp_file = open(path + '/__openerp__.py', 'w')
-        opnrp_file.write(openerp)
+        manifest = self.obj_builder('manifest', user, module_name, summary,
+                                    category, depends, data)
+        opnrp_file = open(path + '/__manifest__.py', 'w')
+        opnrp_file.write(manifest)
         opnrp_file.close()
 
     def build_static(self):
@@ -246,7 +246,7 @@ from . import models""" % user
         if self.create_paths():
             self.build_models()
             self.build_views()
-            self.build_openerp()
+            self.build_manifest()
             self.built_init_module()
             self.build_init_local('/models')
             self.build_static()
@@ -351,14 +351,14 @@ Eg.: Sales or Project ..."""
         icon = path + '/' + module_name + '/static/description/icon.png'
         xml = path + '/' + module_name + '/views/%s.xml' % module_name
         init = path + '/' + module_name + '/' + '__init__.py'
-        openerp = path + '/' + module_name + '/' + '__openerp__.py'
+        manifest = path + '/' + module_name + '/' + '__manifest__.py'
         if self.wizard.get():
             wizard = path + '/' + module_name + '/wizard'
             success = self.loop_exists(path, mod_init, icon, xml, init,
-                                       openerp, wizard)
+                                       manifest, wizard)
         else:
             success = self.loop_exists(path, mod_init, icon, xml, init,
-                                       openerp)
+                                       manifest)
         return success
 
     def initialize(self):
