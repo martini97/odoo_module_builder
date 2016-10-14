@@ -5,11 +5,16 @@ from os.path import exists
 from os.path import isfile
 from os.path import join
 from shutil import copyfile
-import Tkinter as tk
-import tkMessageBox
-import tkFileDialog
 from os import listdir
 import re
+try:
+    import Tkinter as tk
+    import tkMessageBox
+    import tkFileDialog
+except ImportError:
+    import tkinter as tk
+    import tkinter.messagebox as tkMessageBox
+    import tkinter.filedialog as tkFileDialog
 
 
 def UserError(message):
@@ -25,10 +30,9 @@ class OdooBuilder(tk.Tk):
         self.initialize()
 
     def get_format(self, obj_format):
-        text = """"""
         f = open(obj_format, 'r')
-        for i in f:
-                text += (i.rstrip() + '\n')
+        text = f.read()
+        f.close()
         return text
 
     def obj_builder(self, format, *args):
