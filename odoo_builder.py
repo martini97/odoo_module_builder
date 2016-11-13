@@ -265,12 +265,16 @@ creation. Please, try again.')
 
     def get_module_name(self):
         module_name = str(self.module_name_entry.get())
-        module_class = module_name.replace('.', ' ').title().replace(' ', '')
-        module_objetct = module_name.lower().replace(' ', '.')
-        module_file_py = module_name.lower().replace(' ', '_')
-        module_file_xml = module_name.lower().replace(' ', '_') + '.xml'
+        module_class = re.sub(r'[\W_]', ' ', module_name).title()
+        module_class = re.sub(r' +', ' ', module_class).replace(' ', '')
+        module_object = re.sub(r'[\W_]', ' ', module_name).lower()
+        module_object = re.sub(r' +', ' ', module_object).replace(' ', '.')
+        module_file_py = re.sub(r'[\W_]', ' ', module_name).lower()
+        module_file_py = re.sub(r' +', ' ', module_file_py).replace(' ', '_')
+        module_file_xml = re.sub(r'[\W_]', '_', module_name).lower() + '.xml'
+        module_file_xml = re.sub(r'_+', '_', module_file_xml)
         return {
-            'class': module_class, 'object': module_objetct,
+            'class': module_class, 'object': module_object,
             'py_file': module_file_py, 'xml': module_file_xml
         }
 
